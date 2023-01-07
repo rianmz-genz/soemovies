@@ -16,7 +16,6 @@ const ImagePreview: FC<ImagePreviewProps> = ({
   alt,
   id,
 }) => {
-  console.log(rate);
   const router = useRouter();
   return (
     <li

@@ -10,10 +10,9 @@ import HeaderSearchInput from "../../components/input/HeaderSearchInput";
 const DetailMovie = ({ movie }: any) => {
   const [keyword, setKeyword] = useState<string>("");
   const router = useRouter();
-  console.log(movie);
   const imageUrl = process.env.NEXT_PUBLIC_BASEIMG;
   return (
-    <article className="pt-20 w-full  h-screen max-sm:h-fit bg-[#112136] relative text-white flex flex-col justify-center items-center max-sm:py-20">
+    <article className="pt-20 w-full  h-screen max-sm:h-fit max-sm:min-h-screen bg-[#112136] relative text-white flex flex-col justify-center items-center max-sm:py-20">
       <VscArrowLeft
         className="absolute top-14 left-48 max-sm:top-8 max-sm:left-14 text-2xl bg-slate-700 p-1 rounded-full cursor-pointer"
         onClick={() => {
@@ -73,26 +72,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 };
-// export const getServerSideProps:GetServerSideProps = async (context) => {
-//     const id = context.params?.id as string | undefined
-//     if (!id) {
-//         return {
-//           notFound: true as boolean,
-//         }
-//       }
-//     try{
-//         const detail = await getDetailImage(Number(id))
-//         return{
-//             props:{
-//                 detail
-//             }
-//         }
-//     }catch(error){
-//         return{
-//             notFound: true as boolean
-//         }
-//     }
-
-// }
-
 export default DetailMovie;

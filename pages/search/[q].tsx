@@ -31,7 +31,6 @@ const Search = () => {
           : undefined,
     }
   );
-  console.log(data?.pages);
 
   return (
     <>
