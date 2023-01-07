@@ -1,5 +1,4 @@
-import { getHomeImage } from "../api/image";
-import { useState } from "react";
+import { GetHomeImage } from "../api/image";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -10,14 +9,15 @@ import BannerSearchInput from '../components/input/BannerSearchInput';
 import {BiLoaderAlt} from 'react-icons/bi'
 import ImagePreview from '../components/image/ImagePreview';
 import Head from "next/head";
+import { useState } from 'react';
 
-const index = () => {
+const Index = () => {
   const imageUrl = process.env.NEXT_PUBLIC_BASEIMG;
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState<string>("");
   const router = useRouter();
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
     ["Home"],
-    ({ pageParam = 1 }) => getHomeImage(pageParam),
+    ({ pageParam = 1 }) => GetHomeImage(pageParam),
     {
       getNextPageParam: (lastPage, allPages) =>
         allPages.length < Math.ceil(lastPage.total_pages / 20)
@@ -25,7 +25,6 @@ const index = () => {
           : undefined,
     }
   );
-  console.log(data?.pages)
   return (
     <>
     <Head>
@@ -86,4 +85,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

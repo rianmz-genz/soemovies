@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { GetServerSideProps } from "next";
 import Image from "next/image";
-import { getDetailImage } from "../../api/image";
+import { GetDetailImage } from "../../api/image";
 import { VscStarFull, VscArrowLeft } from "react-icons/vsc";
 import { useRouter } from "next/router";
 import Header from "../../components/header/Header";
@@ -61,7 +61,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   }
 
   try {
-    const movie = await getDetailImage(Number(id));
+    const movie = await GetDetailImage(Number(id));
     return {
       props: {
         movie,
