@@ -1,23 +1,29 @@
-import { getHomeImage } from "../api/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroll-component";
 import Masonry from "react-masonry-css";
-import Banner from '../components/banner/Banner';
-import BannerCaption from '../components/banner/BannerCaption';
-import BannerSearchInput from '../components/input/BannerSearchInput';
-import {BiLoaderAlt} from 'react-icons/bi'
-import ImagePreview from '../components/image/ImagePreview';
+import { BiLoaderAlt } from "react-icons/bi";
 import Head from "next/head";
+import ImagePreview from "../../components/image/ImagePreview";
+import { SearchItem } from "../../api/image";
+import Header from "../../components/header/Header";
+import NavBrand from "../../components/header/NavBrand";
+import HeaderSearchInput from '../../components/input/HeaderSearchInput';
 
-const index = () => {
+const Search = () => {
   const imageUrl = process.env.NEXT_PUBLIC_BASEIMG;
-  const [searchValue, setSearchValue] = useState("");
   const router = useRouter();
+  const [keyword, setKeyword] = useState<string>("")
+  const q  = router.query?.q as string 
+  useEffect(()=> {
+    if(keyword){
+      setKeyword(q)
+    }
+  },[keyword])
   const { data, hasNextPage, fetchNextPage } = useInfiniteQuery(
-    ["Home"],
-    ({ pageParam = 1 }) => getHomeImage(pageParam),
+    ["Search", q],
+    ({ pageParam = 1 }) => SearchItem(q, pageParam),
     {
       getNextPageParam: (lastPage, allPages) =>
         allPages.length < Math.ceil(lastPage.total_pages / 20)
@@ -25,29 +31,26 @@ const index = () => {
           : undefined,
     }
   );
-  console.log(data?.pages)
+  console.log(data?.pages);
+
   return (
     <>
-    <Head>
-      <title>SoeMovies</title>
-    </Head>
-      <Banner>
-        <BannerCaption
-          title="SoeMovies"
-          description="Find out about many films from all corners of the world from themoviedb api"
-        />
-        <BannerSearchInput
-          value={searchValue}
-          onChange={(e) =>
-            setSearchValue(e.target.value.trimStart().replace(/ +(?= )/g, ''))
-          }
+      <Head>
+        <title>Search - {q}</title>
+      </Head>
+      <Header>
+        <NavBrand/>
+        <HeaderSearchInput
+          value={keyword}
+          onChange={(e) => setKeyword(e.target.value)}
           onKeyUp={(e) => {
             if (e.key === 'Enter') {
-              router.push(`/search/${searchValue.trim()}`)
+              router.replace(`/search/${keyword.trim()}`)
             }
           }}
         />
-      </Banner>
+      </Header>
+      <h1 className="bg-[#0f172a] w-full p-3 text-white">The results for {q}</h1>
       {data && (
         <InfiniteScroll
           style={{ overflow: "hidden" }}
@@ -71,7 +74,7 @@ const index = () => {
               .reduce((pre, curr) => [...pre, ...curr])
               .map((poster, index) => (
                 <ImagePreview
-                  key={index} 
+                  key={index}
                   src={`${imageUrl}${poster.poster_path}`}
                   alt={poster.title}
                   title={poster.title}
@@ -86,4 +89,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Search;
